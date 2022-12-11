@@ -1,9 +1,10 @@
 import { Component } from 'react';
-import { FallingLines } from 'react-loader-spinner';
+import { Loader } from './Loader/Loader.styled';
 import { Searchbar } from './Searchbar/Searchbar';
 import { getDataApi } from '../services/api';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
+import { Layout } from './Layout.styled';
 
 export class App extends Component {
   state = {
@@ -44,23 +45,16 @@ export class App extends Component {
 
   render() {
     return (
-      <div>
+      <Layout>
         <Searchbar onSubmit={this.queryData}></Searchbar>
-        {this.state.isLoading && (
-          <FallingLines
-            color="#4fa94d"
-            width="100"
-            visible={true}
-            ariaLabel="falling-lines-loading"
-          />
-        )}
         {this.state.items.length > 0 && (
           <ImageGallery items={this.state.items}></ImageGallery>
         )}
+        {this.state.isLoading && <Loader />}
         {this.state.items.length > 0 && (
           <Button onClick={this.loadMore}></Button>
         )}
-      </div>
+      </Layout>
     );
   }
 }
