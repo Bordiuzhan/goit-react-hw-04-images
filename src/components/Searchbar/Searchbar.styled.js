@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import svg from '../../search.svg';
 
 export const SearchbarHeader = styled.header`
   top: 0;
@@ -34,8 +35,8 @@ export const SearchFormBtn = styled.button`
   width: 48px;
   height: 48px;
   border: 0;
-  background-image: url('../../../public/search.svg');
-  background-size: 40%;
+  background-image: url(${svg});
+  background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0.6;

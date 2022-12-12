@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Loader } from './Loader/Loader.styled';
+import { Loader } from './Loader/Loader';
 import { Searchbar } from './Searchbar/Searchbar';
 import { getDataApi } from '../services/api';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -11,7 +11,6 @@ export class App extends Component {
     page: 1,
     query: '',
     items: [],
-    isLoading: false,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -50,7 +49,7 @@ export class App extends Component {
         {this.state.items.length > 0 && (
           <ImageGallery items={this.state.items}></ImageGallery>
         )}
-        {this.state.isLoading && <Loader />}
+        {this.state.isLoading && <Loader></Loader>}
         {this.state.items.length > 0 && (
           <Button onClick={this.loadMore}></Button>
         )}

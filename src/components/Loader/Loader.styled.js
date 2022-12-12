@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import { FallingLines } from 'react-loader-spinner';
 
-export const Loader = styled(FallingLines)`
+export const WraperLoader = styled.div`
   margin: auto;
-  color: '#fff';
-  width: 150px;
 `;
