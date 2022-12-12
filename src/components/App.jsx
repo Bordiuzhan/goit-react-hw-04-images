@@ -11,15 +11,13 @@ export class App extends Component {
     page: 1,
     query: '',
     items: [],
+    error: false,
   };
 
   async componentDidUpdate(_, prevState) {
-    if (
-      prevState.query !== this.state.query ||
-      prevState.page !== this.state.page
-    ) {
+    const { query, page } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
       try {
-        const { query, page } = this.state;
         this.setState({ isLoading: true });
         const response = await getDataApi(query, page);
         this.setState(prevState => ({
@@ -27,13 +25,18 @@ export class App extends Component {
         }));
         this.setState({ isLoading: false });
       } catch (err) {
-        console.log(err);
+        this.setState({ error: true });
+      } finally {
+        this.setState({ isLoading: false });
       }
+    }
+    if (prevState.page > 1) {
+      this.scrollWindow();
     }
   }
 
   queryData = ({ query }) => {
-    this.setState({ query: query, page: 1, items: [] });
+    this.setState({ query, page: 1, items: [] });
   };
 
   loadMore = () => {
@@ -42,17 +45,22 @@ export class App extends Component {
     }));
   };
 
+  scrollWindow = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
+
   render() {
+    const { items, isLoading, error } = this.state;
     return (
       <Layout>
         <Searchbar onSubmit={this.queryData}></Searchbar>
-        {this.state.items.length > 0 && (
-          <ImageGallery items={this.state.items}></ImageGallery>
-        )}
-        {this.state.isLoading && <Loader></Loader>}
-        {this.state.items.length > 0 && (
-          <Button onClick={this.loadMore}></Button>
-        )}
+        {error && <h1>Ooops... Something went wrong.Try again. </h1>}
+        {items.length > 0 && <ImageGallery items={items}></ImageGallery>}
+        {isLoading && <Loader></Loader>}
+        {items.length > 0 && <Button onClick={this.loadMore}></Button>}
       </Layout>
     );
   }

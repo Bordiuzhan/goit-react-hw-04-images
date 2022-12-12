@@ -16,14 +16,12 @@ export class Modal extends Component {
 
   handleKeyDown = e => {
     if (e.code === 'Escape') {
-      console.log('ти нажав ESCAPE');
       this.props.closeModal();
     }
   };
 
   handleBackDropClick = e => {
     if (e.target === e.currentTarget) {
-      console.log('ти нажав Beck Drop');
       this.props.closeModal();
     }
   };
@@ -31,7 +29,7 @@ export class Modal extends Component {
   render() {
     return createPortal(
       <Overlay
-        tabIndex={-1}
+        tabIndex={0}
         onKeyDown={this.handleKeyDown}
         onClick={this.handleBackDropClick}
       >

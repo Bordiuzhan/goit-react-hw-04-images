@@ -13,7 +13,7 @@ export class Searchbar extends Component {
   };
 
   handleChange = e => {
-    const query = e.target.value;
+    const query = e.target.value.trim();
     this.setState({ query });
   };
 
@@ -27,7 +27,7 @@ export class Searchbar extends Component {
     return (
       <SearchbarHeader>
         <Form onSubmit={this.handleSubmit}>
-          <SearchFormBtn type="submit">
+          <SearchFormBtn type="submit" disabled={!this.state.query}>
             <SearchFormBtnLabel>Search</SearchFormBtnLabel>
           </SearchFormBtn>
 

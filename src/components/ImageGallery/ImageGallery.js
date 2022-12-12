@@ -3,6 +3,7 @@ import { List } from './ImageGallery.styled';
 import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ items }) => {
+  console.log(items);
   return (
     <List>
       {items.map(item => (
@@ -19,7 +20,7 @@ export const ImageGallery = ({ items }) => {
 ImageGallery.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
       webformatURL: PropTypes.string.isRequired,
       largeImageURL: PropTypes.string.isRequired,
     })
