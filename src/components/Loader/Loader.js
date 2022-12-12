@@ -1,5 +1,5 @@
 import { Bars } from 'react-loader-spinner';
-import { WraperLoader, Spinner } from './Loader.styled';
+import { WraperLoader } from './Loader.styled';
 
 export const Loader = () => {
   return (
