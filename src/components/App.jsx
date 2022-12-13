@@ -11,6 +11,7 @@ export class App extends Component {
     page: 1,
     query: '',
     items: [],
+    total: 0,
     error: false,
   };
 
@@ -22,8 +23,8 @@ export class App extends Component {
         const response = await getDataApi(query, page);
         this.setState(prevState => ({
           items: [...prevState.items, ...response.hits],
+          total: response.total,
         }));
-        this.setState({ isLoading: false });
       } catch (err) {
         this.setState({ error: true });
       } finally {
@@ -36,6 +37,9 @@ export class App extends Component {
   }
 
   queryData = ({ query }) => {
+    if (query === this.state.query) {
+      return;
+    }
     this.setState({ query, page: 1, items: [] });
   };
 
@@ -53,14 +57,16 @@ export class App extends Component {
   };
 
   render() {
-    const { items, isLoading, error } = this.state;
+    const { items, isLoading, error, total } = this.state;
     return (
       <Layout>
         <Searchbar onSubmit={this.queryData}></Searchbar>
         {error && <h1>Ooops... Something went wrong.Try again. </h1>}
         {items.length > 0 && <ImageGallery items={items}></ImageGallery>}
         {isLoading && <Loader></Loader>}
-        {items.length > 0 && <Button onClick={this.loadMore}></Button>}
+        {total !== items.length && items.length > 0 && (
+          <Button onClick={this.loadMore}></Button>
+        )}
       </Layout>
     );
   }
