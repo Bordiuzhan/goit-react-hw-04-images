@@ -1,43 +1,28 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
 import { GalleryItem, ImageGallery } from './ImageGalleryItem.styled';
 import PropTypes from 'prop-types';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    largeImage: '',
+export const ImageGalleryItem = ({ largeImageUrl, webImage }) => {
+  const [largeImage, setLargeImage] = useState('');
+
+  const openModal = () => {
+    setLargeImage(largeImageUrl);
   };
 
-  openModal = () => {
-    this.setState({
-      largeImage: this.props.largeImage,
-    });
+  const closeModal = () => {
+    setLargeImage('');
   };
 
-  closeModal = () => {
-    this.setState({
-      largeImage: '',
-    });
-  };
-
-  render() {
-    return (
-      <GalleryItem>
-        <ImageGallery
-          src={this.props.webImage}
-          alt=""
-          onClick={this.openModal}
-        />
-        {this.state.largeImage && (
-          <Modal
-            largeImage={this.state.largeImage}
-            closeModal={this.closeModal}
-          ></Modal>
-        )}
-      </GalleryItem>
-    );
-  }
-}
+  return (
+    <GalleryItem>
+      <ImageGallery src={webImage} alt="" onClick={openModal} />
+      {largeImage && (
+        <Modal largeImage={largeImage} closeModal={closeModal}></Modal>
+      )}
+    </GalleryItem>
+  );
+};
 
 ImageGalleryItem.propTypes = {
   webImage: PropTypes.string.isRequired,

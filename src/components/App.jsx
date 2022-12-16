@@ -1,73 +1,75 @@
-import { Component } from 'react';
-import { Loader } from './Loader/Loader';
-import { Searchbar } from './Searchbar/Searchbar';
 import { getDataApi } from '../services/api';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Button } from './Button/Button';
 import { Layout } from './Layout.styled';
+import { Loader } from './Loader';
+import { Searchbar } from './Searchbar';
+import { ImageGallery } from './ImageGallery';
+import { Button } from './Button';
+import { useState, useEffect, useLayoutEffect } from 'react';
 
-export class App extends Component {
-  state = {
-    page: 1,
-    query: '',
-    items: [],
-    total: 0,
-    error: false,
-  };
+export function App() {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+  const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async componentDidUpdate(_, prevState) {
-    const { query, page } = this.state;
-    if (prevState.query !== query || prevState.page !== page) {
-      try {
-        this.setState({ isLoading: true });
-        const response = await getDataApi(query, page);
-        this.setState(prevState => ({
-          items: [...prevState.items, ...response.hits],
-          total: response.total,
-        }));
-      } catch (err) {
-        this.setState({ error: true });
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    }
-    if (prevState.page > 1) {
-      this.scrollWindow();
-    }
-  }
-
-  queryData = ({ query }) => {
-    if (query === this.state.query) {
-      return;
-    }
-    this.setState({ query, page: 1, items: [] });
-  };
-
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
-  scrollWindow = () => {
+  const scrollWindow = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
   };
 
-  render() {
-    const { items, isLoading, error, total } = this.state;
-    return (
-      <Layout>
-        <Searchbar onSubmit={this.queryData}></Searchbar>
-        {error && <h1>Ooops... Something went wrong.Try again. </h1>}
-        {items.length > 0 && <ImageGallery items={items}></ImageGallery>}
-        {isLoading && <Loader></Loader>}
-        {total !== items.length && items.length > 0 && (
-          <Button onClick={this.loadMore}></Button>
-        )}
-      </Layout>
-    );
-  }
+  useLayoutEffect(() => {
+    if (page > 1) {
+      console.log(page);
+      scrollWindow();
+    }
+  });
+
+  useEffect(() => {
+    if (query === '') {
+      return;
+    }
+
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const response = await getDataApi(query, page);
+        setItems(prevItems => [...prevItems, ...response.hits]);
+        setTotal(response.total);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, [page, query]);
+
+  const queryData = data => {
+    if (data === query) {
+      return;
+    }
+    setQuery(data);
+    setPage(1);
+    setItems([]);
+  };
+
+  const loadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  return (
+    <Layout>
+      <Searchbar onSubmit={queryData}></Searchbar>
+      {error && <h1>Ooops... Something went wrong.Try again. </h1>}
+      {items.length > 0 && <ImageGallery items={items}></ImageGallery>}
+      {isLoading && <Loader></Loader>}
+      {total !== items.length && items.length > 0 && (
+        <Button onClick={loadMore}></Button>
+      )}
+    </Layout>
+  );
 }

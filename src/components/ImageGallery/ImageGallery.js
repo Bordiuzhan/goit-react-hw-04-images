@@ -9,7 +9,7 @@ export const ImageGallery = ({ items }) => {
         <ImageGalleryItem
           key={item.id}
           webImage={item.webformatURL}
-          largeImage={item.largeImageURL}
+          largeImageUrl={item.largeImageURL}
         ></ImageGalleryItem>
       ))}
     </List>
