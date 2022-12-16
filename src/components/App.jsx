@@ -23,7 +23,6 @@ export function App() {
 
   useLayoutEffect(() => {
     if (page > 1) {
-      console.log(page);
       scrollWindow();
     }
   });
