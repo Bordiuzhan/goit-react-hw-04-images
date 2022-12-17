@@ -7,9 +7,14 @@ const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ closeModal, largeImage }) => {
   useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        closeModal();
+      }
+    };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
+  }, [closeModal]);
 
   const handleKeyDown = e => {
     if (e.code === 'Escape') {
